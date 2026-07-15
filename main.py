@@ -1,3 +1,7 @@
+import csv
+import os
+
+
 def check_eligibility(age, salary, credit_score):
     reasons = []
 
@@ -22,19 +26,46 @@ credit_score = int(input("Enter Credit Score: "))
 
 reasons = check_eligibility(age, salary, credit_score)
 
+if not reasons:
+    status = "Approved"
+else:
+    status = "Rejected"
+
 print("\nLoan Report")
-print("----------------------------")
+print("-")
 print("Customer Name :", name)
 print("Age           :", age)
 print("Salary        :", salary)
 print("Credit Score  :", credit_score)
+print("Loan Status   :", status)
 
-if len(reasons) == 0:
-    print("\nLoan Status : APPROVED")
-    print("Reason : Customer meets all eligibility criteria.")
-else:
-    print("\nLoan Status : REJECTED")
-    print("Reason :")
-
+if reasons:
+    print("\nReasons:")
     for reason in reasons:
         print("-", reason)
+
+filename = "loan_data.csv"
+
+file_exists = os.path.isfile(filename)
+
+with open(filename, "a", newline="") as file:
+    writer = csv.writer(file)
+
+    if not file_exists:
+        writer.writerow([
+            "Name",
+            "Age",
+            "Salary",
+            "Credit Score",
+            "Status"
+        ])
+
+    writer.writerow([
+        name,
+        age,
+        salary,
+        credit_score,
+        status
+    ])
+
+print("\nApplication saved successfully.")
